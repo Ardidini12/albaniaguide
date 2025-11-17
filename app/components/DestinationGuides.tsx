@@ -72,9 +72,6 @@ const travelTips = [
     icon: Info,
     tips: [
       'Buses connect major cities affordably',
-      'Car rental recommended for flexibility',
-      'Taxis available but negotiate price first',
-      'Domestic flights between major cities'
     ]
   },
   {
@@ -83,7 +80,6 @@ const travelTips = [
     tips: [
       'Try traditional byrek and tavë kosi',
       'Fresh seafood along the coast',
-      'Tipping 10% is customary',
       'Restaurant menus often in English'
     ]
   }
@@ -279,15 +275,7 @@ export function DestinationGuides() {
                 </li>
                 <li className="flex items-start gap-2">
                   <span className="text-purple-700 mt-1">✓</span>
-                  <span className="text-gray-700 text-sm">No special vaccinations required</span>
-                </li>
-                <li className="flex items-start gap-2">
-                  <span className="text-purple-700 mt-1">✓</span>
                   <span className="text-gray-700 text-sm">Emergency number: 112 (universal)</span>
-                </li>
-                <li className="flex items-start gap-2">
-                  <span className="text-purple-700 mt-1">✓</span>
-                  <span className="text-gray-700 text-sm">Travel insurance recommended</span>
                 </li>
               </ul>
             </CardContent>

@@ -115,8 +115,6 @@ export function VacationPackages() {
               <TabsTrigger value="beach" onClick={() => setSelectedTheme('Beach')}>Beach</TabsTrigger>
               <TabsTrigger value="cultural" onClick={() => setSelectedTheme('Cultural')}>Cultural</TabsTrigger>
               <TabsTrigger value="adventure" onClick={() => setSelectedTheme('Adventure')}>Adventure</TabsTrigger>
-              <TabsTrigger value="honeymoon" onClick={() => setSelectedTheme('Honeymoon')}>Honeymoon</TabsTrigger>
-              <TabsTrigger value="family" onClick={() => setSelectedTheme('Family')}>Family</TabsTrigger>
             </TabsList>
           </Tabs>
 

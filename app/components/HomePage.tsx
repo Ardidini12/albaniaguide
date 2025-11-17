@@ -3,18 +3,13 @@ import { Button } from './ui/button';
 import { ImageWithFallback } from './figma/ImageWithFallback';
 import { Card, CardContent } from './ui/card';
 import { 
-  Plane, 
-  Ship, 
-  Mountain, 
-  Heart, 
   Users, 
   Briefcase, 
   Shield, 
-  FileText,
   Star,
-  MapPin,
   Calendar,
-  Award
+  Award,
+  Car
 } from 'lucide-react';
 
 const featuredDestinations = [
@@ -49,14 +44,9 @@ const featuredDestinations = [
 ];
 
 const services = [
-  { icon: Plane, title: 'Flight & Hotel Booking', description: 'Best rates guaranteed', link: '/booking' },
-  { icon: Ship, title: 'Cruise Deals', description: 'Mediterranean cruises', link: '/cruises' },
-  { icon: Mountain, title: 'Adventure Tours', description: 'Eco-tourism experiences', link: '/adventure' },
-  { icon: Heart, title: 'Honeymoon Packages', description: 'Romantic getaways', link: '/honeymoon' },
   { icon: Users, title: 'Group Travel', description: 'Special group rates', link: '/group-travel' },
   { icon: Briefcase, title: 'Business Travel', description: 'Corporate solutions', link: '/business' },
-  { icon: Shield, title: 'Travel Insurance', description: 'Comprehensive coverage', link: '/insurance' },
-  { icon: FileText, title: 'Document Assistance', description: 'Visa & passport help', link: '/documents' }
+  { icon: Car, title: 'Airport Pickup', description: 'Pick up from Tirana Airport', link: '/booking' },
 ];
 
 export function HomePage() {
@@ -179,7 +169,7 @@ export function HomePage() {
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {services.map((service, index) => {
               const Icon = service.icon;
               return (
