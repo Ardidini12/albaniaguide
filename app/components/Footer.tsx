@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { Plane, Phone, Mail, MapPin, Facebook, Instagram, Twitter } from 'lucide-react';
+import { Plane, Phone, Mail, MapPin, Instagram } from 'lucide-react';
 
 export function Footer() {
   return (
@@ -21,13 +21,7 @@ export function Footer() {
             </p>
             <div className="flex gap-3">
               <a href="#" className="w-9 h-9 rounded-full bg-gray-800 hover:bg-red-700 flex items-center justify-center transition-colors">
-                <Facebook className="w-4 h-4" />
-              </a>
-              <a href="#" className="w-9 h-9 rounded-full bg-gray-800 hover:bg-red-700 flex items-center justify-center transition-colors">
                 <Instagram className="w-4 h-4" />
-              </a>
-              <a href="#" className="w-9 h-9 rounded-full bg-gray-800 hover:bg-red-700 flex items-center justify-center transition-colors">
-                <Twitter className="w-4 h-4" />
               </a>
             </div>
           </div>
@@ -37,8 +31,6 @@ export function Footer() {
             <h3 className="text-white mb-4">Quick Links</h3>
             <ul className="space-y-2 text-sm">
               <li><Link href="/packages" className="hover:text-white transition-colors">Vacation Packages</Link></li>
-              <li><Link href="/booking" className="hover:text-white transition-colors">Book Flights & Hotels</Link></li>
-              <li><Link href="/cruises" className="hover:text-white transition-colors">Cruise Deals</Link></li>
               <li><Link href="/guides" className="hover:text-white transition-colors">Destination Guides</Link></li>
               <li><Link href="/testimonials" className="hover:text-white transition-colors">Customer Reviews</Link></li>
             </ul>
@@ -48,11 +40,8 @@ export function Footer() {
           <div>
             <h3 className="text-white mb-4">Our Services</h3>
             <ul className="space-y-2 text-sm">
-              <li><Link href="/honeymoon" className="hover:text-white transition-colors">Honeymoon Packages</Link></li>
-              <li><Link href="/adventure" className="hover:text-white transition-colors">Adventure Tours</Link></li>
               <li><Link href="/group-travel" className="hover:text-white transition-colors">Group Travel</Link></li>
               <li><Link href="/business" className="hover:text-white transition-colors">Business Travel</Link></li>
-              <li><Link href="/insurance" className="hover:text-white transition-colors">Travel Insurance</Link></li>
             </ul>
           </div>
 
