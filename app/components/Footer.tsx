@@ -72,7 +72,6 @@ export function Footer() {
 
         <div className="border-t border-gray-800 mt-8 pt-8 text-sm text-center">
           <p>&copy; 2025 Discover Albania. All rights reserved. | 
-            <Link href="/documents" className="hover:text-white ml-1">Travel Documents</Link> | 
             <a href="#" className="hover:text-white ml-1">Privacy Policy</a> | 
             <a href="#" className="hover:text-white ml-1">Terms of Service</a>
           </p>
