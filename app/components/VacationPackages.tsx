@@ -9,86 +9,28 @@ import { Badge } from './ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from './ui/tabs';
 import { MapPin, Calendar, Users, Star } from 'lucide-react';
 
-const packages = [
-  {
-    id: 1,
-    name: 'Albanian Riviera Beach Escape',
-    region: 'South',
-    theme: 'Beach',
-    duration: '7 days / 6 nights',
-    price: 899,
-    rating: 4.8,
-    reviews: 124,
-    image: 'https://images.unsplash.com/photo-1696765906526-c839897180a5?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxBbGJhbmlhJTIwYmVhY2glMjBjb2FzdHxlbnwxfHx8fDE3NjI4Nzc0NTh8MA&ixlib=rb-4.1.0&q=80&w=1080',
-    highlights: ['Saranda & Ksamil beaches', '4-star beachfront hotel', 'Boat tour included', 'Daily breakfast']
-  },
-  {
-    id: 2,
-    name: 'UNESCO Heritage Tour',
-    region: 'Central',
-    theme: 'Cultural',
-    duration: '5 days / 4 nights',
-    price: 749,
-    rating: 4.9,
-    reviews: 89,
-    image: 'https://images.unsplash.com/photo-1705405999485-188af37e0462?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxCZXJhdCUyMEFsYmFuaWF8ZW58MXx8fHwxNzYyODc3NDU4fDA&ixlib=rb-4.1.0&q=80&w=1080',
-    highlights: ['Berat & Gjirokastër', 'Expert local guides', 'Museum entries', 'Traditional cuisine']
-  },
-  {
-    id: 3,
-    name: 'Albanian Alps Adventure',
-    region: 'North',
-    theme: 'Adventure',
-    duration: '8 days / 7 nights',
-    price: 1199,
-    rating: 5.0,
-    reviews: 67,
-    image: 'https://images.unsplash.com/photo-1634033855284-4cb96c9fdd66?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxBbGJhbmlhJTIwbW91bnRhaW5zJTIwaGlraW5nfGVufDF8fHx8MTc2Mjg3NzQ1OXww&ixlib=rb-4.1.0&q=80&w=1080',
-    highlights: ['Theth & Valbona trek', 'Mountain guesthouses', 'Professional guides', 'All meals included']
-  },
-  {
-    id: 4,
-    name: 'Romantic Coastal Getaway',
-    region: 'South',
-    theme: 'Honeymoon',
-    duration: '6 days / 5 nights',
-    price: 1349,
-    rating: 4.9,
-    reviews: 112,
-    image: 'https://images.unsplash.com/photo-1738248000857-7760b1e8333d?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxBbGJhbmlhbiUyMHJpdmllcmF8ZW58MXx8fHwxNzYyODc3NDU4fDA&ixlib=rb-4.1.0&q=80&w=1080',
-    highlights: ['5-star luxury resort', 'Private beach access', 'Couples spa package', 'Romantic dinners']
-  },
-  {
-    id: 5,
-    name: 'Complete Albania Experience',
-    region: 'All',
-    theme: 'Cultural',
-    duration: '12 days / 11 nights',
-    price: 1799,
-    rating: 4.8,
-    reviews: 93,
-    image: 'https://images.unsplash.com/photo-1705405999485-188af37e0462?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxCZXJhdCUyMEFsYmFuaWF8ZW58MXx8fHwxNzYyODc3NDU4fDA&ixlib=rb-4.1.0&q=80&w=1080',
-    highlights: ['North to South tour', 'All major attractions', 'Mix of hotels & guesthouses', 'Most comprehensive']
-  },
-  {
-    id: 6,
-    name: 'Family Beach Adventure',
-    region: 'South',
-    theme: 'Family',
-    duration: '7 days / 6 nights',
-    price: 1099,
-    rating: 4.7,
-    reviews: 78,
-    image: 'https://images.unsplash.com/photo-1696765906526-c839897180a5?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxBbGJhbmlhJTIwYmVhY2glMjBjb2FzdHxlbnwxfHx8fDE3NjI4Nzc0NTh8MA&ixlib=rb-4.1.0&q=80&w=1080',
-    highlights: ['Family-friendly resort', 'Kids club included', 'Water sports', 'All-inclusive option']
-  }
-];
+interface Package {
+  id: string;
+  name: string;
+  region: string;
+  theme: string;
+  duration: string;
+  price: number;
+  rating: number;
+  reviews: number;
+  image: string;
+  highlights: string[];
+}
 
-export function VacationPackages() {
+interface VacationPackagesProps {
+  packages: Package[];
+}
+
+export function VacationPackages({ packages: initialPackages }: VacationPackagesProps) {
   const [selectedRegion, setSelectedRegion] = useState('All');
   const [selectedTheme, setSelectedTheme] = useState('All');
 
-  const filteredPackages = packages.filter(pkg => {
+  const filteredPackages = initialPackages.filter(pkg => {
     const regionMatch = selectedRegion === 'All' || pkg.region === selectedRegion;
     const themeMatch = selectedTheme === 'All' || pkg.theme === selectedTheme;
     return regionMatch && themeMatch;

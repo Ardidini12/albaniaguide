@@ -12,44 +12,25 @@ import {
   Car
 } from 'lucide-react';
 
-const featuredDestinations = [
-  {
-    id: 1,
-    name: 'Albanian Riviera',
-    description: 'Pristine beaches and crystal-clear waters',
-    image: 'https://images.unsplash.com/photo-1696765906526-c839897180a5?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxBbGJhbmlhJTIwYmVhY2glMjBjb2FzdHxlbnwxfHx8fDE3NjI4Nzc0NTh8MA&ixlib=rb-4.1.0&q=80&w=1080',
-    price: '€899'
-  },
-  {
-    id: 2,
-    name: 'Berat - City of a Thousand Windows',
-    description: 'UNESCO World Heritage site',
-    image: 'https://images.unsplash.com/photo-1705405999485-188af37e0462?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxCZXJhdCUyMEFsYmFuaWF8ZW58MXx8fHwxNzYyODc3NDU4fDA&ixlib=rb-4.1.0&q=80&w=1080',
-    price: '€749'
-  },
-  {
-    id: 3,
-    name: 'Albanian Alps',
-    description: 'Breathtaking mountain adventures',
-    image: 'https://images.unsplash.com/photo-1634033855284-4cb96c9fdd66?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxBbGJhbmlhJTIwbW91bnRhaW5zJTIwaGlraW5nfGVufDF8fHx8MTc2Mjg3NzQ1OXww&ixlib=rb-4.1.0&q=80&w=1080',
-    price: '€679'
-  },
-  {
-    id: 4,
-    name: 'Ksamil & Saranda',
-    description: 'Paradise beaches and vibrant nightlife',
-    image: 'https://images.unsplash.com/photo-1738248000857-7760b1e8333d?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxBbGJhbmlhbiUyMHJpdmllcmF8ZW58MXx8fHwxNzYyODc3NDU4fDA&ixlib=rb-4.1.0&q=80&w=1080',
-    price: '€829'
-  }
-];
-
 const services = [
   { icon: Users, title: 'Group Travel', description: 'Special group rates', link: '/group-travel' },
   { icon: Briefcase, title: 'Business Travel', description: 'Corporate solutions', link: '/business' },
   { icon: Car, title: 'Airport Pickup', description: 'Pick up from Tirana Airport', link: '/booking' },
 ];
 
-export function HomePage() {
+interface FeaturedDestination {
+  id: string;
+  name: string;
+  description: string;
+  image: string;
+  price: string;
+}
+
+interface HomePageProps {
+  featuredDestinations: FeaturedDestination[];
+}
+
+export function HomePage({ featuredDestinations }: HomePageProps) {
   return (
     <div>
       {/* Hero Section */}
