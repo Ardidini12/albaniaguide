@@ -194,12 +194,21 @@ async function deletePackage(id: string) {
 // ---------------------------------------------------------
 // 2. THE VISUALS (The Admin Form)
 // ---------------------------------------------------------
+// Force dynamic rendering to prevent build-time database access
+export const dynamic = 'force-dynamic'
+
 export default async function PackagesManagementPage() {
-  const packages = await prisma.package.findMany({
-    orderBy: { createdAt: 'desc' }
-  })
-  
   type Package = Awaited<ReturnType<typeof prisma.package.findMany>>[0]
+  
+  let packages: Package[]
+  try {
+    packages = await prisma.package.findMany({
+      orderBy: { createdAt: 'desc' }
+    })
+  } catch (error) {
+    console.error('Failed to fetch packages:', error)
+    packages = [] // Fallback to empty array on error
+  }
   
   // Serialize packages: convert Decimal to number for client component
   const serializedPackages = packages.map((pkg: Package) => ({
