@@ -5,11 +5,123 @@
 // Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
 
 generator client {
-  provider = "prisma-client"
-  output   = "../app/generated/prisma"
+ // provider = "prisma-client"
+  //output   = "../app/generated/prisma"
+
+  provider = "prisma-client-js"  // Must have "-js"
+  // No output line = defaults to node_modules (Standard)
 }
 
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
+}
+
+// 1. USERS
+model User {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  phone     String   @unique
+  password  String   
+
+  firstName String?
+  lastName  String?
+  role      String   @default("USER") // "USER" or "ADMIN"
+
+  bookings  Booking[]
+  reviews   Review[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+// 2. BOOKINGS
+model Booking {
+  id           String   @id @default(cuid())
+  
+  contactEmail String
+  contactPhone String
+  contactName  String?
+
+  userId       String?
+  user         User?    @relation(fields: [userId], references: [id])
+
+  packageId    String
+  package      Package  @relation(fields: [packageId], references: [id])
+
+  status       String   @default("PENDING") 
+  people       Int      @default(1)
+  totalPrice   Decimal  @default(0.0)
+
+  createdAt    DateTime @default(now())
+}
+
+// 3. PACKAGES (Guides/Tours)
+model Package {
+  id           String   @id @default(cuid())
+
+  title        String   
+  description  String   
+  images       String[] 
+
+  price        Decimal
+  rating       Float    @default(5.0)
+  reviewsCount Int      @default(0)
+
+  // Filters
+  location     String   
+  region       String   
+  city         String?  
+  type         String   
+
+  duration     Int      
+  durationText String   
+
+  features     String[] 
+  isPopular    Boolean  @default(false)
+
+  bookings     Booking[]
+  reviews      Review[]
+
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+}
+
+// 4. GROUP TRAVEL SERVICES
+model GroupService {
+  id        String   @id @default(cuid())
+  title     String   
+  subtitle  String   
+  minPeople Int      
+  benefits  String[] 
+  icon      String?  
+}
+
+// 5. GROUP DISCOUNTS
+model GroupDiscount {
+  id          String   @id @default(cuid())
+  peopleRange String   
+  discount    String   
+  features    String[] 
+  isHighlight Boolean  @default(false) 
+}
+
+// 6. REVIEWS
+model Review {
+  id          String   @id @default(cuid())
+
+  rating      Int      
+  comment     String
+  
+  userName    String   
+  userCountry String   
+  date        String   
+
+  packageId   String
+  package     Package  @relation(fields: [packageId], references: [id])
+  
+  userId      String?
+  user        User?    @relation(fields: [userId], references: [id])
+
+  createdAt   DateTime @default(now())
 }

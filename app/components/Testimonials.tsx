@@ -74,15 +74,6 @@ const testimonials = [
     date: 'September 2024',
     text: 'An eco-tourism dream! The focus on sustainable travel and supporting local communities was impressive. We hiked through pristine nature, stayed in family-run guesthouses, and ate farm-to-table meals. Albania\'s natural beauty is unparalleled.',
     image: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=400'
-  },
-  {
-    name: 'David & Rachel Cohen',
-    location: 'Tel Aviv, Israel',
-    rating: 5,
-    trip: 'Cultural & Beach Combination',
-    date: 'July 2024',
-    text: 'We wanted both culture and beach time, and Albania delivered perfectly. Spent days exploring ancient ruins and UNESCO sites, then relaxed on beautiful beaches. The blend of history, nature, and hospitality made this our favorite European trip yet.',
-    image: 'https://images.unsplash.com/photo-1519345182560-3f2917c472ef?w=400'
   }
 ];
 
