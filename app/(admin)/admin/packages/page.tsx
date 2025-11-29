@@ -9,78 +9,176 @@ import { PackageCard } from './PackageCard'
 async function createPackage(formData: FormData) {
   'use server'
 
-  // A. Extract data from the form
-  const title = formData.get('title') as string
-  const description = formData.get('description') as string
-  const price = formData.get('price') as string
-  const location = formData.get('location') as string // "South Albania"
-  const region = formData.get('region') as string     // "South" (for filter)
-  const type = formData.get('type') as string         // "Beach" (for filter)
-  
-  // Duration Logic
-  const duration = formData.get('duration') as string         // "7"
-  const durationText = formData.get('durationText') as string // "7 days / 6 nights"
-
-  // B. Logic: Convert "Wifi, Breakfast" into ["Wifi", "Breakfast"]
-  const featuresRaw = formData.get('features') as string
-  const featuresList = featuresRaw.split(',').map((f) => f.trim()).filter(f => f !== '')
-
-  // C. Logic: Image Link
-  const imageUrl = formData.get('imageUrl') as string
-
-  // D. Save to Database
-  await prisma.package.create({
-    data: {
-      title,
-      description,
-      price: parseFloat(price),      // Convert text to number
-      duration: parseInt(duration),  // Convert text to number
-      durationText,
-      location,
-      region,
-      type,
-      features: featuresList,        // Save the list
-      images: [imageUrl],            // Store as a list of strings
-      isPopular: true                // Default to true for now
+  // Helper function to validate required string fields
+  const getRequiredString = (fieldName: string): string => {
+    const value = formData.get(fieldName)
+    if (!value || typeof value !== 'string' || value.trim() === '') {
+      throw new Error(`Missing or invalid required field: ${fieldName}`)
     }
-  })
+    return value.trim()
+  }
 
-  // E. Refresh the page
-  revalidatePath('/admin/packages')
+  // Helper function to validate and parse numeric fields
+  const getRequiredNumber = (fieldName: string): number => {
+    const value = formData.get(fieldName)
+    if (!value || typeof value !== 'string') {
+      throw new Error(`Missing or invalid required field: ${fieldName}`)
+    }
+    const parsed = Number(value)
+    if (isNaN(parsed) || parsed <= 0) {
+      throw new Error(`Invalid number for field ${fieldName}: must be a positive number`)
+    }
+    return parsed
+  }
+
+  // Helper function to get optional string fields
+  const getOptionalString = (fieldName: string): string => {
+    const value = formData.get(fieldName)
+    return (value && typeof value === 'string') ? value.trim() : ''
+  }
+
+  try {
+    // A. Extract and validate required string fields
+    const title = getRequiredString('title')
+    const description = getRequiredString('description')
+    const location = getRequiredString('location')
+    const region = getRequiredString('region')
+    const type = getRequiredString('type')
+    const durationText = getRequiredString('durationText')
+
+    // B. Extract and validate numeric fields
+    const price = getRequiredNumber('price')
+    const duration = getRequiredNumber('duration')
+    
+    // Validate duration is a reasonable integer
+    const durationInt = Math.floor(duration)
+    if (durationInt !== duration || durationInt < 1 || durationInt > 365) {
+      throw new Error('Duration must be a positive integer between 1 and 365 days')
+    }
+
+    // C. Handle optional fields defensively
+    const featuresRaw = getOptionalString('features')
+    const featuresList = featuresRaw
+      ? featuresRaw.split(',').map((f) => f.trim()).filter(f => f !== '')
+      : []
+
+    const imageUrl = getOptionalString('imageUrl')
+    const images = imageUrl ? [imageUrl] : []
+
+    // D. Save to Database with error handling
+    await prisma.package.create({
+      data: {
+        title,
+        description,
+        price,
+        duration: durationInt,
+        durationText,
+        location,
+        region,
+        type,
+        features: featuresList,
+        images,
+        isPopular: true
+      }
+    })
+
+    // E. Only refresh on success
+    revalidatePath('/admin/packages')
+  } catch (error) {
+    // Log error and rethrow with context
+    console.error('Failed to create package:', error)
+    if (error instanceof Error) {
+      throw new Error(`Failed to create package: ${error.message}`)
+    }
+    throw new Error('Failed to create package: Unknown error occurred')
+  }
 }
 
 async function updatePackage(id: string, formData: FormData) {
   'use server'
 
-  const title = formData.get('title') as string
-  const description = formData.get('description') as string
-  const price = formData.get('price') as string
-  const location = formData.get('location') as string
-  const region = formData.get('region') as string
-  const type = formData.get('type') as string
-  const duration = formData.get('duration') as string
-  const durationText = formData.get('durationText') as string
-  const featuresRaw = formData.get('features') as string
-  const featuresList = featuresRaw.split(',').map((f) => f.trim()).filter(f => f !== '')
-  const imageUrl = formData.get('imageUrl') as string
+  // Validate ID
+  if (!id || typeof id !== 'string' || id.trim() === '') {
+    throw new Error('Invalid package ID')
+  }
 
-  await prisma.package.update({
-    where: { id },
-    data: {
-      title,
-      description,
-      price: parseFloat(price),
-      duration: parseInt(duration),
-      durationText,
-      location,
-      region,
-      type,
-      features: featuresList,
-      images: [imageUrl],
+  // Helper functions (same as createPackage)
+  const getRequiredString = (fieldName: string): string => {
+    const value = formData.get(fieldName)
+    if (!value || typeof value !== 'string' || value.trim() === '') {
+      throw new Error(`Missing or invalid required field: ${fieldName}`)
     }
-  })
+    return value.trim()
+  }
 
-  revalidatePath('/admin/packages')
+  const getRequiredNumber = (fieldName: string): number => {
+    const value = formData.get(fieldName)
+    if (!value || typeof value !== 'string') {
+      throw new Error(`Missing or invalid required field: ${fieldName}`)
+    }
+    const parsed = Number(value)
+    if (isNaN(parsed) || parsed <= 0) {
+      throw new Error(`Invalid number for field ${fieldName}: must be a positive number`)
+    }
+    return parsed
+  }
+
+  const getOptionalString = (fieldName: string): string => {
+    const value = formData.get(fieldName)
+    return (value && typeof value === 'string') ? value.trim() : ''
+  }
+
+  try {
+    // Extract and validate required fields
+    const title = getRequiredString('title')
+    const description = getRequiredString('description')
+    const location = getRequiredString('location')
+    const region = getRequiredString('region')
+    const type = getRequiredString('type')
+    const durationText = getRequiredString('durationText')
+
+    // Validate numeric fields
+    const price = getRequiredNumber('price')
+    const duration = getRequiredNumber('duration')
+    
+    const durationInt = Math.floor(duration)
+    if (durationInt !== duration || durationInt < 1 || durationInt > 365) {
+      throw new Error('Duration must be a positive integer between 1 and 365 days')
+    }
+
+    // Handle optional fields defensively
+    const featuresRaw = getOptionalString('features')
+    const featuresList = featuresRaw
+      ? featuresRaw.split(',').map((f) => f.trim()).filter(f => f !== '')
+      : []
+
+    const imageUrl = getOptionalString('imageUrl')
+    const images = imageUrl ? [imageUrl] : []
+
+    await prisma.package.update({
+      where: { id },
+      data: {
+        title,
+        description,
+        price,
+        duration: durationInt,
+        durationText,
+        location,
+        region,
+        type,
+        features: featuresList,
+        images,
+      }
+    })
+
+    revalidatePath('/admin/packages')
+  } catch (error) {
+    console.error('Failed to update package:', error)
+    if (error instanceof Error) {
+      throw new Error(`Failed to update package: ${error.message}`)
+    }
+    throw new Error('Failed to update package: Unknown error occurred')
+  }
 }
 
 async function deletePackage(id: string) {
