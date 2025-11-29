@@ -300,7 +300,7 @@ export default async function PackagesManagementPage() {
             <h2 className="text-xl font-bold mb-6 text-gray-700">Existing Packages ({packages.length})</h2>
             
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              {serializedPackages.map((pkg: Package) => (
+              {serializedPackages.map((pkg) => (
                 <PackageCard
                   key={pkg.id}
                   pkg={pkg}
