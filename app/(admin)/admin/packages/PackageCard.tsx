@@ -87,17 +87,25 @@ export function PackageCard({ pkg, regions, types, onUpdate, onDelete }: Package
             <div>
               <label className="text-xs font-bold text-gray-500 uppercase">Region</label>
               <select name="region" defaultValue={pkg.region} className="w-full p-2 border rounded mt-1" required>
-                {regions.map((r) => (
-                  <option key={r.id} value={r.name}>{r.name}</option>
-                ))}
+                {regions.length > 0 ? (
+                  regions.map((r) => (
+                    <option key={r.id} value={r.name}>{r.name}</option>
+                  ))
+                ) : (
+                  <option value={pkg.region}>{pkg.region}</option>
+                )}
               </select>
             </div>
             <div>
               <label className="text-xs font-bold text-gray-500 uppercase">Type</label>
               <select name="type" defaultValue={pkg.type} className="w-full p-2 border rounded mt-1" required>
-                {types.map((t) => (
-                  <option key={t.id} value={t.name}>{t.name}</option>
-                ))}
+                {types.length > 0 ? (
+                  types.map((t) => (
+                    <option key={t.id} value={t.name}>{t.name}</option>
+                  ))
+                ) : (
+                  <option value={pkg.type}>{pkg.type}</option>
+                )}
               </select>
             </div>
           </div>
