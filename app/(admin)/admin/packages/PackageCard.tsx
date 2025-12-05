@@ -17,13 +17,20 @@ interface Package {
   isPopular: boolean;
 }
 
+interface Filter {
+  id: string;
+  name: string;
+}
+
 interface PackageCardProps {
   pkg: Package;
+  regions: Filter[];
+  types: Filter[];
   onUpdate: (id: string, formData: FormData) => Promise<void>;
   onDelete: (id: string) => Promise<void>;
 }
 
-export function PackageCard({ pkg, onUpdate, onDelete }: PackageCardProps) {
+export function PackageCard({ pkg, regions, types, onUpdate, onDelete }: PackageCardProps) {
   const [isEditing, setIsEditing] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
 
@@ -79,18 +86,18 @@ export function PackageCard({ pkg, onUpdate, onDelete }: PackageCardProps) {
           <div className="grid grid-cols-2 gap-2">
             <div>
               <label className="text-xs font-bold text-gray-500 uppercase">Region</label>
-              <select name="region" defaultValue={pkg.region} className="w-full p-2 border rounded mt-1">
-                <option value="South">South</option>
-                <option value="North">North</option>
-                <option value="Central">Central</option>
+              <select name="region" defaultValue={pkg.region} className="w-full p-2 border rounded mt-1" required>
+                {regions.map((r) => (
+                  <option key={r.id} value={r.name}>{r.name}</option>
+                ))}
               </select>
             </div>
             <div>
               <label className="text-xs font-bold text-gray-500 uppercase">Type</label>
-              <select name="type" defaultValue={pkg.type} className="w-full p-2 border rounded mt-1">
-                <option value="Beach">Beach</option>
-                <option value="Adventure">Adventure</option>
-                <option value="Cultural">Cultural</option>
+              <select name="type" defaultValue={pkg.type} className="w-full p-2 border rounded mt-1" required>
+                {types.map((t) => (
+                  <option key={t.id} value={t.name}>{t.name}</option>
+                ))}
               </select>
             </div>
           </div>

@@ -1,6 +1,8 @@
 import { Card, CardContent } from './ui/card';
 import { Button } from './ui/button';
-import { Users, Calendar, DollarSign, Gift, Check, Phone, Mail } from 'lucide-react';
+import { Users, Calendar, DollarSign, Gift, Check, Phone, Mail,} from 'lucide-react';
+import Link from 'next/link';
+
 
 const groupTypes = [
   {
@@ -8,7 +10,7 @@ const groupTypes = [
     icon: Users,
     description: 'Educational tours with cultural and historical focus',
     minSize: '15 students',
-    benefits: ['Teacher goes free (1:15 ratio)', 'Educational materials', 'Museum discounts', 'Safe accommodation']
+    benefits: ['Private group transport', 'Educational materials', 'Interactive workshops', 'Safe accommodation']
   },
   {
     title: 'Corporate Groups',
@@ -34,7 +36,7 @@ const groupTypes = [
 ];
 
 const benefits = [
-  { icon: DollarSign, title: 'Group Discounts', description: 'Save up to 25% with group rates' },
+  { icon: DollarSign, title: 'Group Discounts', description: 'Exclusive group tier pricing' },
   { icon: Calendar, title: 'Flexible Dates', description: 'Choose dates that work for your group' },
   { icon: Gift, title: 'Free Upgrades', description: 'Complimentary perks for larger groups' },
   { icon: Users, title: 'Private Guide', description: 'Dedicated guide for groups 15+' }
@@ -120,8 +122,10 @@ export function GroupTravel() {
           </div>
         </div>
 
+         
         {/* Group Sizes & Pricing */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12">
+        
+        {/* <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12">
           <Card>
             <CardContent className="p-6 text-center">
               <div className="text-4xl mb-2">8-14</div>
@@ -198,10 +202,10 @@ export function GroupTravel() {
               </ul>
             </CardContent>
           </Card>
-        </div>
+        </div>    */}
 
         {/* How It Works */}
-        <div className="bg-white rounded-lg p-8 shadow-lg mb-12">
+        {/* <div className="bg-white rounded-lg p-8 shadow-lg mb-12">
           <h2 className="text-3xl mb-8 text-center">How Group Booking Works</h2>
           <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
             <div className="text-center">
@@ -241,10 +245,10 @@ export function GroupTravel() {
               </p>
             </div>
           </div>
-        </div>
+        </div> */}
 
         {/* Popular Group Tours */}
-        <div className="mb-12">
+        {/* <div className="mb-12">
           <h2 className="text-3xl mb-8 text-center">Popular Group Tours</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             <Card>
@@ -279,7 +283,7 @@ export function GroupTravel() {
               </CardContent>
             </Card>
           </div>
-        </div>
+        </div> */}
 
         {/* CTA */}
         <div className="bg-gradient-to-r from-teal-700 to-teal-900 text-white rounded-lg p-12 text-center">
@@ -289,11 +293,8 @@ export function GroupTravel() {
           </p>
           <div className="space-y-4">
             <div className="flex gap-4 justify-center flex-wrap">
-              <Button size="lg" className="bg-white text-teal-700 hover:bg-gray-100">
-                Request Group Quote
-              </Button>
-              <Button size="lg" variant="outline" className="border-white text-white hover:bg-white hover:text-teal-700">
-                Download Brochure
+              <Button size="lg" className="bg-white text-teal-700 hover:bg-gray-100" asChild>
+                <Link href="/booking">Book Now</Link>
               </Button>
             </div>
             <div className="flex items-center justify-center gap-6 flex-wrap text-sm">

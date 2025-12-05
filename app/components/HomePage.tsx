@@ -26,11 +26,55 @@ interface FeaturedDestination {
   price: string;
 }
 
-interface HomePageProps {
-  featuredDestinations: FeaturedDestination[];
+interface Package {
+  location: string;
+  region: string;
+  type: string;
+  duration: number;
+  durationText: string;
 }
 
-export function HomePage({ featuredDestinations }: HomePageProps) {
+interface HomePageProps {
+  featuredDestinations: FeaturedDestination[];
+  packages: Package[];
+}
+
+export function HomePage({ featuredDestinations, packages }: HomePageProps) {
+  // Extract unique destinations from packages (using location, fallback to region)
+  const destinations = Array.from(
+    new Set(
+      packages
+        .map(pkg => pkg.location || pkg.region)
+        .filter(Boolean)
+    )
+  ).sort();
+
+  // Extract unique travel types from packages
+  const travelTypes = Array.from(
+    new Set(
+      packages
+        .map(pkg => pkg.type)
+        .filter(Boolean)
+    )
+  ).sort();
+
+  // Extract unique durations from packages (using durationText, fallback to duration)
+  const durations = Array.from(
+    new Set(
+      packages
+        .map(pkg => pkg.durationText || `${pkg.duration} days`)
+        .filter(Boolean)
+    )
+  ).sort((a, b) => {
+    // Sort by numeric value if possible
+    const numA = parseInt(a);
+    const numB = parseInt(b);
+    if (!isNaN(numA) && !isNaN(numB)) {
+      return numA - numB;
+    }
+    return a.localeCompare(b);
+  });
+
   return (
     <div>
       {/* Hero Section */}
@@ -70,29 +114,33 @@ export function HomePage({ featuredDestinations }: HomePageProps) {
               <label className="block text-sm mb-2">Destination</label>
               <select className="w-full px-4 py-2 border rounded-lg">
                 <option>All Destinations</option>
-                <option>Albanian Riviera</option>
-                <option>Tirana</option>
-                <option>Berat</option>
-                <option>Saranda</option>
+                {destinations.map((destination) => (
+                  <option key={destination} value={destination}>
+                    {destination}
+                  </option>
+                ))}
               </select>
             </div>
             <div>
               <label className="block text-sm mb-2">Travel Type</label>
               <select className="w-full px-4 py-2 border rounded-lg">
                 <option>All Types</option>
-                <option>Beach</option>
-                <option>Adventure</option>
-                <option>Cultural</option>
-                <option>Honeymoon</option>
+                {travelTypes.map((type) => (
+                  <option key={type} value={type}>
+                    {type}
+                  </option>
+                ))}
               </select>
             </div>
             <div>
               <label className="block text-sm mb-2">Duration</label>
               <select className="w-full px-4 py-2 border rounded-lg">
                 <option>Any Duration</option>
-                <option>3-5 days</option>
-                <option>6-10 days</option>
-                <option>11+ days</option>
+                {durations.map((duration) => (
+                  <option key={duration} value={duration}>
+                    {duration}
+                  </option>
+                ))}
               </select>
             </div>
             <div className="flex items-end">
@@ -287,9 +335,6 @@ export function HomePage({ featuredDestinations }: HomePageProps) {
             Let our travel experts help you plan the perfect trip
           </p>
           <div className="flex flex-wrap gap-4 justify-center">
-            <Button size="lg" variant="outline" className="bg-white text-red-700 hover:bg-gray-100" asChild>
-              <Link href="/agents">Talk to an Agent</Link>
-            </Button>
             <Button size="lg" className="bg-white/10 backdrop-blur-sm border-white text-white hover:bg-white hover:text-red-700" asChild>
               <Link href="/booking">Book Now</Link>
             </Button>

@@ -353,14 +353,14 @@ export function EmergencySupport() {
               <div className="text-4xl mb-2">+355 800 911 911</div>
               <div className="text-sm">Save this number in your phone now</div>
             </div>
-            <div className="flex gap-4 justify-center flex-wrap">
+            {/* <div className="flex gap-4 justify-center flex-wrap">
               <Button size="lg" className="bg-white text-red-700 hover:bg-gray-100">
                 Download Emergency Card
               </Button>
               <Button size="lg" variant="outline" className="border-white text-white hover:bg-white hover:text-red-700">
                 Email Contact Info
               </Button>
-            </div>
+            </div> */}
           </div>
         </div>
       </div>

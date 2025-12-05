@@ -72,6 +72,9 @@ const travelTips = [
     icon: Info,
     tips: [
       'Buses connect major cities affordably',
+      'Private transfers available for inter-city travel',
+      'Drive carefully on winding mountain roads',
+
     ]
   },
   {
