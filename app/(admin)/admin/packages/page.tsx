@@ -433,9 +433,6 @@ export default async function PackagesManagementPage() {
 
             {/* Filter Management - Outside form to avoid nesting */}
             <div className="border-t pt-4 mt-6">
-              <div className="mb-2 text-xs text-gray-500">
-                Debug: {regions.length} regions, {types.length} types loaded
-              </div>
               <FilterManager
                 regions={regions}
                 types={types}
