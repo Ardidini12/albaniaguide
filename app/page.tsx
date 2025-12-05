@@ -23,6 +23,29 @@ export default async function Page() {
     featuredPackages = []
   }
 
+  // Fetch all packages for filter options
+  let allPackages: Array<{
+    location: string;
+    region: string;
+    type: string;
+    duration: number;
+    durationText: string;
+  }>
+  try {
+    allPackages = await prisma.package.findMany({
+      select: {
+        location: true,
+        region: true,
+        type: true,
+        duration: true,
+        durationText: true
+      }
+    });
+  } catch (error) {
+    console.error('Failed to fetch packages for filters:', error)
+    allPackages = []
+  }
+
   // Map Prisma data to the format expected by HomePage
   const featuredDestinations = featuredPackages.map((pkg) => ({
     id: pkg.id,
@@ -32,6 +55,6 @@ export default async function Page() {
     price: `€${pkg.price.toString()}`
   }));
 
-  return <HomePage featuredDestinations={featuredDestinations} />;
+  return <HomePage featuredDestinations={featuredDestinations} packages={allPackages} />;
 }
 

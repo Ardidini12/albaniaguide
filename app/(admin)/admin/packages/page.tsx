@@ -2,10 +2,105 @@
 import { prisma } from '@/lib/prisma'
 import { revalidatePath } from 'next/cache'
 import { PackageCard } from './PackageCard'
+import { FilterManager } from './FilterManager'
 
 // ---------------------------------------------------------
 // 1. SERVER ACTIONS
 // ---------------------------------------------------------
+async function addRegionFilter(formData: FormData) {
+  'use server'
+  const name = formData.get('name')
+  if (!name || typeof name !== 'string' || name.trim() === '') {
+    throw new Error('Region name is required')
+  }
+  try {
+    const result = await prisma.regionFilter.create({
+      data: { name: name.trim() }
+    })
+    revalidatePath('/admin/packages', 'page')
+    return { success: true, id: result.id }
+  } catch (error: any) {
+    if (error.code === 'P2002') {
+      throw new Error('Region already exists')
+    }
+    if (error.code === 'P2021') {
+      throw new Error('Database table does not exist. Please run: npx prisma migrate deploy')
+    }
+    throw new Error(`Failed to add region: ${error.message || error.code || 'Unknown error'}`)
+  }
+}
+
+async function removeRegionFilter(id: string) {
+  'use server'
+  try {
+    await prisma.regionFilter.delete({
+      where: { id }
+    })
+    revalidatePath('/admin/packages', 'page')
+  } catch (error) {
+    throw new Error('Failed to remove region')
+  }
+}
+
+async function addTypeFilter(formData: FormData) {
+  'use server'
+  const name = formData.get('name')
+  if (!name || typeof name !== 'string' || name.trim() === '') {
+    throw new Error('Type name is required')
+  }
+  try {
+    const result = await prisma.typeFilter.create({
+      data: { name: name.trim() }
+    })
+    revalidatePath('/admin/packages', 'page')
+    return { success: true, id: result.id }
+  } catch (error: any) {
+    if (error.code === 'P2002') {
+      throw new Error('Type already exists')
+    }
+    if (error.code === 'P2021') {
+      throw new Error('Database table does not exist. Please run: npx prisma migrate deploy')
+    }
+    throw new Error(`Failed to add type: ${error.message || error.code || 'Unknown error'}`)
+  }
+}
+
+async function removeTypeFilter(id: string) {
+  'use server'
+  try {
+    await prisma.typeFilter.delete({
+      where: { id }
+    })
+    revalidatePath('/admin/packages', 'page')
+  } catch (error) {
+    throw new Error('Failed to remove type')
+  }
+}
+
+async function addRegionAction(name: string) {
+  'use server'
+  try {
+    const formData = new FormData()
+    formData.append('name', name)
+    await addRegionFilter(formData)
+    revalidatePath('/admin/packages', 'page')
+  } catch (error) {
+    throw error
+  }
+}
+
+async function addTypeAction(name: string) {
+  'use server'
+  try {
+    const formData = new FormData()
+    formData.append('name', name)
+    await addTypeFilter(formData)
+    revalidatePath('/admin/packages', 'page')
+  } catch (error) {
+    throw error
+  }
+}
+
 async function createPackage(formData: FormData) {
   'use server'
 
@@ -201,13 +296,38 @@ export default async function PackagesManagementPage() {
   type Package = Awaited<ReturnType<typeof prisma.package.findMany>>[0]
   
   let packages: Package[]
+  let regions: { id: string; name: string }[] = []
+  let types: { id: string; name: string }[] = []
+  
   try {
     packages = await prisma.package.findMany({
       orderBy: { createdAt: 'desc' }
     })
   } catch (error) {
     console.error('Failed to fetch packages:', error)
-    packages = [] // Fallback to empty array on error
+    packages = []
+  }
+
+  try {
+    regions = await prisma.regionFilter.findMany({
+      orderBy: { name: 'asc' }
+    })
+  } catch (error: any) {
+    if (error.code === 'P2021') {
+      // Table doesn't exist
+    }
+    regions = []
+  }
+
+  try {
+    types = await prisma.typeFilter.findMany({
+      orderBy: { name: 'asc' }
+    })
+  } catch (error: any) {
+    if (error.code === 'P2021') {
+      // Table doesn't exist
+    }
+    types = []
   }
   
   // Serialize packages: convert Decimal to number for client component
@@ -246,18 +366,26 @@ export default async function PackagesManagementPage() {
               <div className="grid grid-cols-2 gap-2">
                 <div>
                   <label className="text-xs font-bold text-gray-500 uppercase">Region (Filter)</label>
-                  <select name="region" className="w-full p-2 border rounded mt-1">
-                    <option value="South">South</option>
-                    <option value="North">North</option>
-                    <option value="Central">Central</option>
+                  <select name="region" className="w-full p-2 border rounded mt-1" required>
+                    {regions.length > 0 ? (
+                      regions.map((r) => (
+                        <option key={r.id} value={r.name}>{r.name}</option>
+                      ))
+                    ) : (
+                      <option value="">No regions available</option>
+                    )}
                   </select>
                 </div>
                 <div>
                   <label className="text-xs font-bold text-gray-500 uppercase">Type (Filter)</label>
-                  <select name="type" className="w-full p-2 border rounded mt-1">
-                    <option value="Beach">Beach</option>
-                    <option value="Adventure">Adventure</option>
-                    <option value="Cultural">Cultural</option>
+                  <select name="type" className="w-full p-2 border rounded mt-1" required>
+                    {types.length > 0 ? (
+                      types.map((t) => (
+                        <option key={t.id} value={t.name}>{t.name}</option>
+                      ))
+                    ) : (
+                      <option value="">No types available</option>
+                    )}
                   </select>
                 </div>
               </div>
@@ -302,6 +430,21 @@ export default async function PackagesManagementPage() {
                 Create Package
               </button>
             </form>
+
+            {/* Filter Management - Outside form to avoid nesting */}
+            <div className="border-t pt-4 mt-6">
+              <div className="mb-2 text-xs text-gray-500">
+                Debug: {regions.length} regions, {types.length} types loaded
+              </div>
+              <FilterManager
+                regions={regions}
+                types={types}
+                onAddRegion={addRegionAction}
+                onRemoveRegion={removeRegionFilter}
+                onAddType={addTypeAction}
+                onRemoveType={removeTypeFilter}
+              />
+            </div>
           </div>
 
           {/* --- RIGHT: THE PREVIEW --- */}
@@ -313,6 +456,8 @@ export default async function PackagesManagementPage() {
                 <PackageCard
                   key={pkg.id}
                   pkg={pkg}
+                  regions={regions}
+                  types={types}
                   onUpdate={updatePackage}
                   onDelete={deletePackage}
                 />

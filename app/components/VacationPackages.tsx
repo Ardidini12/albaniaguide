@@ -24,9 +24,11 @@ interface Package {
 
 interface VacationPackagesProps {
   packages: Package[];
+  regions: string[];
+  types: string[];
 }
 
-export function VacationPackages({ packages: initialPackages }: VacationPackagesProps) {
+export function VacationPackages({ packages: initialPackages, regions, types }: VacationPackagesProps) {
   const [selectedRegion, setSelectedRegion] = useState('All');
   const [selectedTheme, setSelectedTheme] = useState('All');
 
@@ -54,27 +56,33 @@ export function VacationPackages({ packages: initialPackages }: VacationPackages
           <Tabs defaultValue="all" className="w-full">
             <TabsList className="mb-6">
               <TabsTrigger value="all" onClick={() => setSelectedTheme('All')}>All Packages</TabsTrigger>
-              <TabsTrigger value="beach" onClick={() => setSelectedTheme('Beach')}>Beach</TabsTrigger>
-              <TabsTrigger value="cultural" onClick={() => setSelectedTheme('Cultural')}>Cultural</TabsTrigger>
-              <TabsTrigger value="adventure" onClick={() => setSelectedTheme('Adventure')}>Adventure</TabsTrigger>
+              {types.map((type) => (
+                <TabsTrigger 
+                  key={type} 
+                  value={type.toLowerCase()} 
+                  onClick={() => setSelectedTheme(type)}
+                >
+                  {type}
+                </TabsTrigger>
+              ))}
             </TabsList>
           </Tabs>
 
           <div className="flex flex-wrap gap-4">
             <div>
               <label className="block text-sm mb-2">Filter by Region</label>
-              <select 
+              <select
                 className="px-4 py-2 border rounded-lg"
                 value={selectedRegion}
                 onChange={(e) => setSelectedRegion(e.target.value)}
               >
                 <option value="All">All Regions</option>
-                <option value="North">Northern Albania</option>
-                <option value="Central">Central Albania</option>
-                <option value="South">Southern Albania</option>
+                {regions.map((region) => (
+                  <option key={region} value={region}>{region}</option>
+                ))}
               </select>
             </div>
-            
+
             <div>
               <label className="block text-sm mb-2">Sort by</label>
               <select className="px-4 py-2 border rounded-lg">
@@ -96,6 +104,7 @@ export function VacationPackages({ packages: initialPackages }: VacationPackages
           </p>
         </div>
 
+
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {filteredPackages.map((pkg) => (
             <Card key={pkg.id} className="overflow-hidden hover:shadow-xl transition-shadow">
@@ -108,7 +117,7 @@ export function VacationPackages({ packages: initialPackages }: VacationPackages
                 <Badge className="absolute top-4 left-4 bg-red-700">{pkg.theme}</Badge>
                 <Badge className="absolute top-4 right-4 bg-white text-gray-900">{pkg.region}</Badge>
               </div>
-              
+
               <CardContent className="p-6">
                 <div className="flex items-center gap-2 mb-2">
                   <div className="flex items-center gap-1">
@@ -163,8 +172,9 @@ export function VacationPackages({ packages: initialPackages }: VacationPackages
             Our travel experts can create a custom package tailored to your preferences and budget
           </p>
           <Button size="lg" asChild>
-            <Link href="/agents">Contact a Travel Agent</Link>
+            <Link href="/booking">Book Now</Link>
           </Button>
+
         </div>
       </div>
     </div>

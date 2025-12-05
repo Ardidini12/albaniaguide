@@ -125,3 +125,17 @@ model Review {
 
   createdAt   DateTime @default(now())
 }
+
+// 7. REGION FILTERS
+model RegionFilter {
+  id        String   @id @default(cuid())
+  name      String   @unique
+  createdAt DateTime @default(now())
+}
+
+// 8. TYPE FILTERS
+model TypeFilter {
+  id        String   @id @default(cuid())
+  name      String   @unique
+  createdAt DateTime @default(now())
+}
